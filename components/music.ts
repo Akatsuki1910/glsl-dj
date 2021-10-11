@@ -14,7 +14,7 @@ export default class Music {
   constructor() {
     this.width = 512
     this.height = 512
-    this.duration = 1
+    this.duration = 60
 
     this.canvas = document.createElement('canvas')
     this.canvas.width = this.width
