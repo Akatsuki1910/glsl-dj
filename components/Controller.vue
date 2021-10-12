@@ -30,7 +30,6 @@ export default class Controller extends Vue {
 
   // computed()
   get getBPM() {
-    console.log(1)
     return this.bpm
   }
 
@@ -52,13 +51,14 @@ export default class Controller extends Vue {
 
   @Watch('getBPM')
   setBPM(bpm: number) {
-    console.log(2)
     this.changeBPM(bpm)
   }
 
-  @Watch('editor')
+  @Watch('editor', { immediate: true })
   setValue(ace: Ace) {
-    ace.setValue(soundShader)
+    if (ace) {
+      ace.setValue(soundShader)
+    }
   }
 
   // methods()
