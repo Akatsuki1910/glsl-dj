@@ -2,12 +2,13 @@
   div.container
     .edi
       Ace(ref="sound")
-    .controller
+    .mixer
       div
         | BPM
         input.bpm(type="number" min="1" step="1" v-model="bpm")
-      Controller(:editor='s1' :bpm='getBPM')
-      Controller(:editor='s2' :bpm='getBPM')
+      .controller-wrap
+        Controller(:editor='s1' :bpm='getBPM').controller
+        Controller(:editor='s2' :bpm='getBPM').controller
     .edi
       Ace(ref="sound2")
 </template>
@@ -51,7 +52,15 @@ export default class Index extends Vue {
   height: 100vh;
 }
 
-.controller {
+.mixer {
   width: 20vw;
+}
+
+.controller-wrap {
+  display: flex;
+
+  .container {
+    flex: 1;
+  }
 }
 </style>
