@@ -19,6 +19,7 @@ import Music from '../components/music'
 import soundShader from '../components/glsl/sound/sound.frag'
 import soundmainShader from '../components/glsl/sound/soundmain.frag'
 import sounddefinitionShader from '../components/glsl/sound/sounddefinition.frag'
+import { createNode, getTime } from './musicTimer'
 @Component({})
 export default class Controller extends Vue {
   @Prop({ type: Ace }) readonly editor!: Ace
@@ -73,8 +74,9 @@ export default class Controller extends Vue {
 
   start() {
     this.mFlag = false
+    createNode()
     this.changeBPM(this.bpm)
-    this.music.pp()
+    this.music.pp(getTime())
   }
 
   changeBPM(bpm: number) {

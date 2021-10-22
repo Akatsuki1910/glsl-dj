@@ -86,8 +86,9 @@ export default class Music {
     }
   }
 
-  pp() {
+  pp(t: number) {
     this.node!.buffer = this.audioBuffer!
-    this.node!.start(0)
+    const time = t % this.node!.loopEnd
+    this.node!.start(0, time)
   }
 }

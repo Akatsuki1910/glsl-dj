@@ -16,6 +16,7 @@
 <script lang="ts">
 import { Component, Ref, Vue } from 'nuxt-property-decorator'
 import Ace from '../components/Ace.vue'
+import { changeBPM } from '../components/musicTimer'
 @Component({
   components: {
     Ace,
@@ -30,7 +31,9 @@ export default class Index extends Vue {
   bpm = 60
 
   get getBPM() {
-    return +this.bpm
+    const bpm = +this.bpm
+    changeBPM(bpm)
+    return bpm
   }
 
   mounted() {
