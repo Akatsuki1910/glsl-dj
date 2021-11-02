@@ -11,6 +11,8 @@ export default class Music {
   wctx: WebGLRenderingContext
   audioBuffer: AudioBuffer | undefined
   node: AudioBufferSourceNode | undefined
+  gainNode: GainNode | undefined
+  volume: number = 100
   constructor() {
     this.width = 512
     this.height = 512
@@ -35,6 +37,7 @@ export default class Music {
     this.node?.disconnect()
 
     const ctx = new window.AudioContext()
+    this.gainNode = ctx.createGain()
     this.node = ctx.createBufferSource()
     this.node.connect(ctx.destination)
     this.node.loop = true
@@ -43,6 +46,10 @@ export default class Music {
       ctx.sampleRate * this.duration,
       ctx.sampleRate,
     )
+
+    this.node.connect(this.gainNode)
+    this.gainNode.connect(ctx.destination)
+    this.changeVolume()
 
     const uniforms = {
       iBlockOffset: { type: 'f', value: 0.0 },
@@ -84,6 +91,17 @@ export default class Music {
           ((pixels[j * 4 + 2] + 256 * pixels[j * 4 + 3]) / 65535) * 2 - 1
       }
     }
+  }
+
+  setVolume(v: number) {
+    this.volume = v
+    if (this.node) {
+      this.changeVolume()
+    }
+  }
+
+  changeVolume() {
+    this.gainNode!.gain.value = this.volume / 100 - 1
   }
 
   pp(t: number) {

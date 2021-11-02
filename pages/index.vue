@@ -1,34 +1,37 @@
 <template lang="pug">
   div.container
     .edi
-      Ace(ref="sound")
+      Editor(ref="sound")
     .mixer
       div
         | BPM
         input.bpm(type="number" min="1" step="1" v-model="bpm")
       .controller-wrap
-        Controller(:editor='s1' :bpm='getBPM').controller
-        Controller(:editor='s2' :bpm='getBPM').controller
+        Controller(:editor='s1' :bpm='getBPM' :volume='vol1').controller
+        Controller(:editor='s2' :bpm='getBPM' :volume='vol2').controller
+      Slider(@volume="setVolume")
     .edi
-      Ace(ref="sound2")
+      Editor(ref="sound2")
 </template>
 
 <script lang="ts">
 import { Component, Ref, Vue } from 'nuxt-property-decorator'
-import Ace from '../components/Ace.vue'
+import Editor from '../components/Editor.vue'
 import { changeBPM } from '../components/musicTimer'
 @Component({
   components: {
-    Ace,
+    Editor,
   },
 })
 export default class Index extends Vue {
-  @Ref() sound!: Ace
-  @Ref() sound2!: Ace
+  @Ref() sound!: Editor
+  @Ref() sound2!: Editor
 
-  s1: Ace | null = null
-  s2: Ace | null = null
+  s1: Editor | null = null
+  s2: Editor | null = null
   bpm = 60
+  vol1: number = 50
+  vol2: number = 50
 
   get getBPM() {
     const bpm = +this.bpm
@@ -39,6 +42,11 @@ export default class Index extends Vue {
   mounted() {
     this.s1 = this.sound
     this.s2 = this.sound2
+  }
+
+  setVolume(v: number) {
+    this.vol1 = v
+    this.vol2 = 100 - v
   }
 }
 </script>

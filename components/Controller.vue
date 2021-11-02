@@ -14,16 +14,17 @@ import {
   faMusic,
   faPlay,
 } from '@fortawesome/free-solid-svg-icons'
-import Ace from '../components/Ace.vue'
 import Music from '../components/music'
 import soundShader from '../components/glsl/sound/sound.frag'
 import soundmainShader from '../components/glsl/sound/soundmain.frag'
 import sounddefinitionShader from '../components/glsl/sound/sounddefinition.frag'
+import Editor from './Editor.vue'
 import { createNode, getTime } from './musicTimer'
 @Component({})
 export default class Controller extends Vue {
-  @Prop({ type: Ace }) readonly editor!: Ace
+  @Prop({ type: Editor }) readonly editor!: Editor
   @Prop({ type: Number }) readonly bpm!: number
+  @Prop({ type: Number }) readonly volume!: number
 
   private gl: WebGLRenderingContext | null = null
   private music = new Music()
@@ -32,6 +33,10 @@ export default class Controller extends Vue {
   // computed()
   get getBPM() {
     return this.bpm
+  }
+
+  get getVolume() {
+    return this.volume
   }
 
   get faHammer() {
@@ -52,11 +57,20 @@ export default class Controller extends Vue {
 
   @Watch('getBPM')
   setBPM(bpm: number) {
-    this.changeBPM(bpm)
+    if (this.music.node) {
+      if (bpm > 0) {
+        this.music.node.loopEnd = 60 / bpm
+      }
+    }
+  }
+
+  @Watch('getVolume')
+  setVolume(volume: number) {
+    this.music.setVolume(volume)
   }
 
   @Watch('editor', { immediate: true })
-  setValue(ace: Ace) {
+  setValue(ace: Editor) {
     if (ace) {
       ace.setValue(soundShader)
     }
@@ -75,16 +89,8 @@ export default class Controller extends Vue {
   start() {
     this.mFlag = false
     createNode()
-    this.changeBPM(this.bpm)
+    this.setBPM(this.bpm)
     this.music.pp(getTime())
-  }
-
-  changeBPM(bpm: number) {
-    if (this.music.node) {
-      if (bpm > 0) {
-        this.music.node.loopEnd = 60 / bpm
-      }
-    }
   }
 
   compileCheck(s: string) {

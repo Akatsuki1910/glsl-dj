@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import ace from 'ace-builds'
+import { Ace, edit } from 'ace-builds'
 import 'ace-builds/webpack-resolver'
 import 'ace-builds/src-noconflict/mode-glsl'
 import 'ace-builds/src-noconflict/theme-github'
@@ -11,13 +11,13 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-elastic_tabstops_lite'
 import { Component, Ref, Vue } from 'nuxt-property-decorator'
 @Component({})
-export default class Ace extends Vue {
+export default class Editor extends Vue {
   @Ref() aceEditor!: HTMLDivElement
-  editor!: ace.Ace.Editor
+  editor!: Ace.Editor
   gl: WebGLRenderingContext | null = null
   // mounted()
   mounted() {
-    this.editor = ace.edit(this.aceEditor, {
+    this.editor = edit(this.aceEditor, {
       theme: 'ace/theme/monokai',
       mode: 'ace/mode/glsl',
       enableAutoIndent: true,
